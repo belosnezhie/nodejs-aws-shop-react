@@ -39,7 +39,6 @@ export class MyCdkAppStack extends cdk.Stack {
       distributionPaths: ['/*']
     });
 
-    // Add these new outputs to see bucket details
     new cdk.CfnOutput(this, 'BucketName', {
       value: websiteBucket.bucketName,
       description: 'S3 Bucket Name',
@@ -60,7 +59,6 @@ export class MyCdkAppStack extends cdk.Stack {
       description: 'S3 Regional Bucket Domain Name',
     });
 
-    // Keep your existing CloudFront output
     new cdk.CfnOutput(this, 'DistributionDomainName', {
       value: distribution.distributionDomainName,
       description: 'CloudFront Distribution Domain Name',
