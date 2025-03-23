@@ -46,9 +46,10 @@ export default function CSVFileImport({ url }: CSVFileImportProps) {
         params: {
           name: encodeURIComponent(file.name),
         },
-        // headers: {
-        //   Authorization: authorizationToken,
-        // },
+        headers: {
+          Authorization: authorizationToken,
+          // test: "test",
+        },
       });
       console.log("File to upload: ", file.name);
       console.log("Uploading to: ", response.data);
@@ -59,6 +60,7 @@ export default function CSVFileImport({ url }: CSVFileImportProps) {
         body: file,
         // headers: {
         //   Authorization: authorizationToken,
+        //   // test: "test",
         // },
       });
       console.log("Result: ", result);
