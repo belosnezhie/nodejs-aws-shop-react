@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
 import axios from "axios";
+import { Buffer } from "buffer";
+// import "dotenv/config";
 
 type CSVFileImportProps = {
   url: string;
@@ -9,6 +11,14 @@ type CSVFileImportProps = {
 };
 
 export default function CSVFileImport({ url }: CSVFileImportProps) {
+  // const credentials = process.env.CREDENTIALS as string;
+  const credentials = "belosnezie=TEST_PASSWORD";
+  const encodedCreds = Buffer.from(credentials, "utf-8").toString("base64");
+  localStorage.setItem("authorization_token", encodedCreds);
+
+  const authorizationToken = localStorage.getItem("authorization_token") || "";
+  console.log("authorizationToken", authorizationToken);
+
   const [file, setFile] = React.useState<File>();
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,12 +46,20 @@ export default function CSVFileImport({ url }: CSVFileImportProps) {
         params: {
           name: encodeURIComponent(file.name),
         },
+        // headers: {
+        //   Authorization: authorizationToken,
+        // },
       });
       console.log("File to upload: ", file.name);
       console.log("Uploading to: ", response.data);
+      // const headers = new Headers();
+      // headers.append("Authorization", authorizationToken);
       const result = await fetch(response.data, {
         method: "PUT",
         body: file,
+        // headers: {
+        //   Authorization: authorizationToken,
+        // },
       });
       console.log("Result: ", result);
       setFile(undefined);
