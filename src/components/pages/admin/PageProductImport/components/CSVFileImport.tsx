@@ -48,20 +48,13 @@ export default function CSVFileImport({ url }: CSVFileImportProps) {
         },
         headers: {
           Authorization: authorizationToken,
-          // test: "test",
         },
       });
       console.log("File to upload: ", file.name);
       console.log("Uploading to: ", response.data);
-      // const headers = new Headers();
-      // headers.append("Authorization", authorizationToken);
       const result = await fetch(response.data, {
         method: "PUT",
         body: file,
-        // headers: {
-        //   Authorization: authorizationToken,
-        //   // test: "test",
-        // },
       });
       console.log("Result: ", result);
       setFile(undefined);
