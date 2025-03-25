@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 // import { Buffer } from "buffer";
 
 type CSVFileImportProps = {
@@ -11,7 +11,7 @@ type CSVFileImportProps = {
 
 export default function CSVFileImport({ url }: CSVFileImportProps) {
   // Add creds to LS
-  // const credentials = "belosnezie=TEST_PASSWORD_fake";
+  // const credentials = "belosnezie=TEST_PASSWORD";
   // const encodedCreds = Buffer.from(credentials, "utf-8").toString("base64");
   // localStorage.setItem("authorization_token", encodedCreds);
 
@@ -58,6 +58,14 @@ export default function CSVFileImport({ url }: CSVFileImportProps) {
       console.log("Result: ", result);
       setFile(undefined);
     } catch (error) {
+      const restError: AxiosError = error as AxiosError;
+      const status = restError.response?.status;
+      if (status === 401) {
+        alert(`401 HTTP status. Authorization header is not provided`);
+      }
+      if (status === 403) {
+        alert(`403 HTTP status. Invalid credentials, access denied.`);
+      }
       console.error("There was an error uploading the file", error);
     }
   };
