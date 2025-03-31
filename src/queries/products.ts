@@ -3,13 +3,28 @@ import API_PATHS from "~/constants/apiPaths";
 import { AvailableProduct } from "~/models/Product";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import React from "react";
+// import { Buffer } from "buffer";
+// import "dotenv/config";
 
 export function useAvailableProducts() {
+  // const credentials = process.env.CREDENTIALS as string;
+  // const credentials = "belosnezie=TEST_PASSWORD_FAKE";
+  // const encodedCreds = Buffer.from(credentials, "utf-8").toString("base64");
+  // localStorage.setItem("authorization_token", encodedCreds);
+
+  const authorizationToken = localStorage.getItem("authorization_token") || "";
+  console.log("authorizationToken", authorizationToken);
+
   return useQuery<AvailableProduct[], AxiosError>(
     "available-products",
     async () => {
       const res = await axios.get<AvailableProduct[]>(
-        `${API_PATHS.product}/products`
+        `${API_PATHS.product}/products`,
+        {
+          headers: {
+            Authorization: authorizationToken,
+          },
+        }
       );
       return res.data;
     }
