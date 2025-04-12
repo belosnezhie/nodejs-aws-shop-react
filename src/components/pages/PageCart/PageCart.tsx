@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 import { useCart, useInvalidateCart } from "~/queries/cart";
 import AddressForm from "~/components/pages/PageCart/components/AddressForm";
 import { useSubmitOrder } from "~/queries/orders";
+import { useAvailableProducts } from "~/queries/products";
+import { Product } from "~/models/Product";
 
 enum CartStep {
   ReviewCart,
@@ -43,7 +45,7 @@ const Success = () => (
 const steps = ["Review your cart", "Shipping address", "Review your order"];
 
 export default function PageCart() {
-  const { data = [] } = useCart();
+  const cartData = useCart().data || [];
   const { mutate: submitOrder } = useSubmitOrder();
   const invalidateCart = useInvalidateCart();
   const [activeStep, setActiveStep] = React.useState<CartStep>(
@@ -51,7 +53,36 @@ export default function PageCart() {
   );
   const [address, setAddress] = useState<Address>(initialAddressValues);
 
-  const isCartEmpty = data.length === 0;
+  const isCartEmpty = cartData.length === 0;
+
+  // get products and count total
+  const { data = [] } = useAvailableProducts();
+
+  const getProducts = (id: string): Product => {
+    const product = data.find((i) => i.id === id);
+
+    if (!product) {
+      return {
+        id: "",
+        title: "Error product",
+        description: "",
+        price: 0,
+      };
+    }
+
+    return product;
+  };
+
+  const unitedProductsData = cartData.map((i) => ({
+    ...i,
+    product: getProducts(i.product_id),
+  }));
+
+  const totalPrice = unitedProductsData.reduce((total, i) => {
+    return i.count * i.product.price + total;
+  }, 0);
+
+  console.log(totalPrice);
 
   const handleNext = () => {
     if (activeStep !== CartStep.ReviewOrder) {
@@ -59,11 +90,12 @@ export default function PageCart() {
       return;
     }
     const values = {
-      items: data.map((i) => ({
+      items: cartData.map((i) => ({
         productId: i.product.id,
         count: i.count,
       })),
       address,
+      total: totalPrice,
     };
 
     submitOrder(values as Omit<Order, "id">, {
@@ -100,7 +132,7 @@ export default function PageCart() {
       </Stepper>
       {isCartEmpty && <CartIsEmpty />}
       {!isCartEmpty && activeStep === CartStep.ReviewCart && (
-        <ReviewCart items={data} />
+        <ReviewCart items={unitedProductsData} />
       )}
       {activeStep === CartStep.Address && (
         <AddressForm
@@ -110,7 +142,7 @@ export default function PageCart() {
         />
       )}
       {activeStep === CartStep.ReviewOrder && (
-        <ReviewOrder address={address} items={data} />
+        <ReviewOrder address={address} items={unitedProductsData} />
       )}
       {activeStep === CartStep.Success && <Success />}
       {!isCartEmpty &&
