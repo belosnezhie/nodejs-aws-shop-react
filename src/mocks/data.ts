@@ -54,6 +54,7 @@ export const cart: CartItem[] = [
       price: 24,
       title: "ProductOne",
     },
+    product_id: "7567ec4b-b10c-48c5-9345-fc73c48a80aa",
     count: 2,
   },
   {
@@ -63,6 +64,7 @@ export const cart: CartItem[] = [
       price: 15,
       title: "ProductName",
     },
+    product_id: "7567ec4b-b10c-45c5-9345-fc73c48a80a1",
     count: 5,
   },
 ];
@@ -83,6 +85,7 @@ export const orders: Order[] = [
     statusHistory: [
       { status: OrderStatus.Open, timestamp: Date.now(), comment: "New order" },
     ],
+    total: 100,
   },
   {
     id: "2",
@@ -100,5 +103,6 @@ export const orders: Order[] = [
         comment: "Fancy order",
       },
     ],
+    total: 100,
   },
 ];

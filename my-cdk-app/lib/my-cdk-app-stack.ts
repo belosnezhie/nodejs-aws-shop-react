@@ -19,7 +19,8 @@ export class MyCdkAppStack extends cdk.Stack {
     const distribution = new cloudfront.Distribution(this, 'Distribution', {
       defaultBehavior: {
         origin: new origins.S3Origin(websiteBucket),
-        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        // viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.ALLOW_ALL,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       },
       defaultRootObject: 'index.html',
