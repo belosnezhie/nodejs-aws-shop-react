@@ -11,7 +11,7 @@ type CSVFileImportProps = {
 
 export default function CSVFileImport({ url }: CSVFileImportProps) {
   // Add creds to LS
-  const credentials = "test_user_2:password_test_user_2";
+  const credentials = "test_user_3:password_test_user_3";
   const encodedCreds = Buffer.from(credentials, "utf-8").toString("base64");
   localStorage.setItem("authorization_token", encodedCreds);
 
