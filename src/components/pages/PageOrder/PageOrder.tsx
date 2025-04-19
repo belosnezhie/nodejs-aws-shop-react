@@ -59,10 +59,10 @@ export default function PageOrder() {
     if (order && products) {
       return order.items.map((item: OrderItem) => {
         const product = products.find((p) => p.id === item.productId);
-        if (!product) {
+        if (!product || !product.id) {
           throw new Error("Product not found");
         }
-        return { product, count: item.count };
+        return { product, product_id: product.id, count: item.count };
       });
     }
     return [];
